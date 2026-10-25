@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KeyCheck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9e6fb;--panel:#fff;--ink:#1f1b3a;--mute:#625d86;--case:#2b2a55;--edge:#cfcaf0;--track:#d8d4f3;--mint:#2fa97a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16152e;--panel:#211f45;--ink:#f0eeff;--mute:#a29fcc;--case:#0e0d21;--edge:#34316a;--track:#34316a;--mint:#7ee3b2}}
+:root[data-theme="dark"]{--bg:#16152e;--panel:#211f45;--ink:#f0eeff;--mute:#a29fcc;--case:#0e0d21;--edge:#34316a;--track:#34316a;--mint:#7ee3b2}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--u:48px}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Sora",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}
+main{max-width:1280px;margin:0 auto;padding:24px 16px 44px}
+.top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) auto;gap:24px;align-items:center;margin-bottom:22px}
+@media(max-width:820px){.top{grid-template-columns:1fr}}
+h1{font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin:0 0 10px}
+.brand p{margin:0;color:var(--mute);max-width:34ch;font-size:.95rem}
+.last{display:flex;gap:18px;align-items:center;min-width:0}
+.hero{flex:none;width:112px;height:112px;padding-bottom:12px;border-radius:18px;background:#38338f}
+.hero b{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:15px;background:#5f58d4;color:#fff;font-size:2.4rem;font-weight:800;box-shadow:inset 0 2px 0 #ffffff44;padding:4px;text-align:center;overflow:hidden}
+.hero.long b{font-size:1.15rem}
+.hero.live b{background:#ffd43b;color:#3a2800}
+.meta{min-width:0}
+.meta .c{font-size:.95rem;font-weight:600;min-height:1.4em}
+.meta .s{color:var(--mute);font-size:.8rem}
+.hist{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:.72rem;padding:2px 9px;border-radius:12px;background:var(--panel);border:1px solid var(--edge)}
+.prog{display:flex;flex-direction:column;align-items:center;gap:10px}
+.ring{position:relative;width:104px;height:104px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9}
+.ring .tr{stroke:var(--track)}
+.ring .fg{stroke:var(--mint);stroke-linecap:round;stroke-dasharray:263.9;stroke-dashoffset:263.9;transition:stroke-dashoffset .2s}
+.ring div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:1.25rem;line-height:1.1}
+.ring small{font-weight:500;font-size:.68rem;color:var(--mute)}
+button{font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;border:0;background:var(--ink);color:var(--bg);border-radius:20px;padding:7px 18px}
+button:focus-visible{outline:3px solid var(--mint);outline-offset:2px}
+.scroll{overflow-x:auto;padding:4px 0 8px}
+.case{width:max-content;margin:0 auto;background:var(--case);border-radius:22px;padding:18px;box-shadow:0 14px 0 -6px #00000033,0 22px 40px -12px #0000004d}
+.kb{display:flex;gap:calc(var(--u)*.5)}
+.row{display:flex;height:var(--u)}
+.gap{height:calc(var(--u)*.5)}
+.sp{width:calc(var(--u)*var(--w));flex:none}
+.k{--face:#f1e8d4;--base:#b9ab8c;--tx:#2b2640;width:calc(var(--u)*var(--w) - 4px);height:calc(var(--u) - 4px);margin:2px;padding-bottom:calc(var(--u)*.1);border-radius:9px;background:var(--base);user-select:none}
+.k b{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:7px;background:var(--face);color:var(--tx);font-weight:600;font-size:calc(var(--u)*.27);box-shadow:inset 0 2px 0 #ffffff55;transition:transform .05s}
+.k.m{--face:#5f58d4;--base:#38338f;--tx:#fff}
+.k.x{--face:#ff8060;--base:#b8452b;--tx:#fff}
+.k.done{--face:#7ee3b2;--base:#329a70;--tx:#08362a}
+.k.down{--face:#ffd43b;--base:#c79a00;--tx:#3a2800;box-shadow:0 0 22px #ffd43baa}
+.k.down b{transform:translateY(calc(var(--u)*.08))}
+.np{display:grid;grid-template-columns:repeat(4,var(--u));grid-template-rows:repeat(5,var(--u));margin-top:calc(var(--u)*1.5)}
+.np .k{width:auto;height:auto}
+.legend{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font-size:.8rem;color:var(--mute);margin-top:18px}
+.legend span:before{content:"";display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:7px;vertical-align:-1px;background:#f1e8d4;border-bottom:3px solid #b9ab8c}
+.legend .p:before{background:#ffd43b;border-color:#c79a00}
+.legend .d:before{background:#7ee3b2;border-color:#329a70}
+.note{color:var(--mute);font-size:.8rem;margin:12px auto 0;max-width:78ch;text-align:center}
+</style>
+</head>
+<body>
+<main>
+<header class="top">
+  <div class="brand"><h1>KeyCheck</h1><p>Press every key on your keyboard. Held keys glow yellow, working keys turn mint.</p></div>
+  <div class="last">
+    <div class="hero" id="hero"><b id="big">?</b></div>
+    <div class="meta"><div class="c" id="code">Press a key to begin</div><div class="s" id="sub">Last key pressed</div><div class="hist" id="hist"></div></div>
+  </div>
+  <div class="prog">
+    <div class="ring"><svg viewBox="0 0 100 100"><circle class="tr" cx="50" cy="50" r="42"/><circle class="fg" id="fg" cx="50" cy="50" r="42"/></svg><div><span><span id="n">0</span>/<span id="t">0</span></span><small>keys working</small></div></div>
+    <button id="reset" type="button">Start over</button>
+  </div>
+</header>
+<div class="scroll"><div class="case"><div class="kb" id="kb"></div></div></div>
+<div class="legend"><span>Not tested</span><span class="p">Held down</span><span class="d">Working</span></div>
+<p class="note">Keys are matched by physical position, so labels follow a US layout. The Fn key, and sometimes Print Screen or the Windows key, are handled by your system and may never reach the browser.</p>
+</main>
+<script>
+(function(){
+var els={},tested={},total=0;
+function K(c,l,w){return{c:c,l:l,w:w||1}}
+function S(w){return{s:1,w:w}}
+function fn(a,b){var r=[];for(var i=a;i<=b;i++)r.push(K('F'+i,'F'+i));return r}
+var L=function(s){return s.split('').map(function(x){return K('Key'+x,x)})};
+var D=function(s){return s.split('').map(function(x){return K('Digit'+x,x)})};
+var main=[
+ [K('Escape','Esc'),S(1)].concat(fn(1,4),[S(.5)],fn(5,8),[S(.5)],fn(9,12)),
+ 'gap',
+ [K('Backquote','`')].concat(D('1234567890'),[K('Minus','-'),K('Equal','='),K('Backspace','Backspace',2)]),
+ [K('Tab','Tab',1.5)].concat(L('QWERTYUIOP'),[K('BracketLeft','['),K('BracketRight',']'),K('Backslash','\\',1.5)]),
+ [K('CapsLock','Caps',1.75)].concat(L('ASDFGHJKL'),[K('Semicolon',';'),K('Quote','\''),K('Enter','Enter',2.25)]),
+ [K('ShiftLeft','Shift',2.25)].concat(L('ZXCVBNM'),[K('Comma',','),K('Period','.'),K('Slash','/'),K('ShiftRight','Shift',2.75)]),
+ [K('ControlLeft','Ctrl',1.25),K('MetaLeft','Win',1.25),K('AltLeft','Alt',1.25),K('Space','Space',6.25),K('AltRight','Alt',1.25),K('MetaRight','Win',1.25),K('ContextMenu','Menu',1.25),K('ControlRight','Ctrl',1.25)]
+];
+var nav=[
+ [K('PrintScreen','PrtSc'),K('ScrollLock','ScrLk'),K('Pause','Pause')],
+ 'gap',
+ [K('Insert','Ins'),K('Home','Home'),K('PageUp','PgUp')],
+ [K('Delete','Del'),K('End','End'),K('PageDown','PgDn')],
+ [S(3)],
+ [S(1),K('ArrowUp','\u2191'),S(1)],
+ [K('ArrowLeft','\u2190'),K('ArrowDown','\u2193'),K('ArrowRight','\u2192')]
+];
+var np=[
+ ['NumLock','Num',1,1,1,1],['NumpadDivide','/',2,1,1,1],['NumpadMultiply','*',3,1,1,1],['NumpadSubtract','-',4,1,1,1],
+ ['Numpad7','7',1,2,1,1],['Numpad8','8',2,2,1,1],['Numpad9','9',3,2,1,1],['NumpadAdd','+',4,2,1,2],
+ ['Numpad4','4',1,3,1,1],['Numpad5','5',2,3,1,1],['Numpad6','6',3,3,1,1],
+ ['Numpad1','1',1,4,1,1],['Numpad2','2',2,4,1,1],['Numpad3','3',3,4,1,1],['NumpadEnter','Enter',4,4,1,2],
+ ['Numpad0','0',1,5,2,1],['NumpadDecimal','.',3,5,1,1]
+];
+function kind(c){
+ if(c==='Enter'||c==='NumpadEnter'||c==='Escape')return 'x';
+ if(/^(Key|Digit|Minus|Equal|Bracket|Backslash|Semicolon|Quote|Comma|Period|Slash|Backquote|Space|Numpad[0-9]|NumpadDecimal)/.test(c))return 'a';
+ return 'm';
+}
+function cap(c,l){
+ var d=document.createElement('div');d.className='k '+kind(c);
+ var b=document.createElement('b');b.textContent=l;d.appendChild(b);
+ els[c]=d;total++;return d;
+}
+function key(k){
+ if(k.s){var s=document.createElement('div');s.className='sp';s.style.setProperty('--w',k.w);return s}
+ var d=cap(k.c,k.l);d.style.setProperty('--w',k.w);return d;
+}
+function block(rows){
+ var b=document.createElement('div');
+ rows.forEach(function(r){
+  var row=document.createElement('div');
+  if(r==='gap'){row.className='gap'}else{row.className='row';r.forEach(function(k){row.appendChild(key(k))})}
+  b.appendChild(row);
+ });
+ return b;
+}
+var kb=document.getElementById('kb');
+kb.appendChild(block(main));kb.appendChild(block(nav));
+var g=document.createElement('div');g.className='np';
+np.forEach(function(a){
+ var d=cap(a[0],a[1]);
+ d.style.gridColumn=a[2]+' / span '+a[4];d.style.gridRow=a[3]+' / span '+a[5];
+ g.appendChild(d);
+});
+kb.appendChild(g);
+var $=function(i){return document.getElementById(i)};
+$('t').textContent=total;
+var hist=[];
+function update(){
+ var n=Object.keys(tested).length;
+ $('n').textContent=n;
+ $('fg').style.strokeDashoffset=263.9*(1-n/total);
+}
+function show(e){
+ var k=e.key===' '?'Space':e.key;
+ $('big').textContent=k.length>1?k:k.toUpperCase();
+ $('hero').className='hero live'+(k.length>3?' long':'');
+ $('code').textContent=e.code;
+ $('sub').textContent='keyCode '+e.keyCode+(els[e.code]?'':' \u00b7 not on the drawn layout');
+ if(e.repeat)return;
+ hist.unshift(e.code);hist=hist.slice(0,8);
+ $('hist').innerHTML='';
+ hist.forEach(function(h){var c=document.createElement('span');c.className='chip';c.textContent=h;$('hist').appendChild(c)});
+}
+function clearDown(){
+ Object.keys(els).forEach(function(c){els[c].classList.remove('down')});
+ $('hero').classList.remove('live');
+}
+addEventListener('keydown',function(e){
+ e.preventDefault();
+ show(e);
+ var el=els[e.code];
+ if(el){el.classList.add('down');if(!tested[e.code]){tested[e.code]=1;el.classList.add('done');update()}}
+});
+addEventListener('keyup',function(e){
+ e.preventDefault();
+ var el=els[e.code];if(el)el.classList.remove('down');
+ if(e.key==='Meta')clearDown();else $('hero').classList.remove('live');
+});
+addEventListener('blur',clearDown);
+$('reset').addEventListener('click',function(){
+ tested={};hist=[];
+ Object.keys(els).forEach(function(c){els[c].classList.remove('down','done')});
+ $('big').textContent='?';$('hero').className='hero';$('code').textContent='Press a key to begin';
+ $('sub').textContent='Last key pressed';$('hist').innerHTML='';update();$('reset').blur();
+});
+function fit(){
+ var w=document.documentElement.clientWidth-32-36;
+ var u=Math.max(30,Math.min(54,w/23));
+ document.documentElement.style.setProperty('--u',u+'px');
+}
+addEventListener('resize',fit);fit();
+})();
+</script>
+</body>
+</html>
